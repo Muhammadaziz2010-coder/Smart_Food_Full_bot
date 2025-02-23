@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 engine = create_engine("sqlite:///database.db", echo=True)
 Base = declarative_base()
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class User(Base):
     __tablename__ = "users"
@@ -13,11 +13,12 @@ class User(Base):
     telegram_id = Column(Integer, unique=True, nullable=False)
     username = Column(String, nullable=True)
     name = Column(String, nullable=True)
-    real_name = Column(String)
-    phone_number = Column(String, nullable=True) 
+    phone_number = Column(String, nullable=True)
     step = Column(String)
-    latitude = Column(Float, nullable=True)  
-    longitude = Column(Float, nullable=True) 
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    location = Column(String, nullable=True)
+    type_of_orders = Column(String, nullable=True)
 
 
 class Product(Base):
