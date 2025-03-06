@@ -56,3 +56,4 @@ Menyuda quyidagi tugmalar mavjud:
 ### Kerakli kutubxonalar
 ```bash
 pip install aiogram sqlalchemy geopy
+pip install -r requirements.txt
