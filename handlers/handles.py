@@ -99,10 +99,12 @@ async def handle_phone_number(message: Message, state: FSMContext):
     telegram_id = message.from_user.id
     phone_number = None
 
+    # Telefon raqamini olish
     if message.contact:
         phone_number = message.contact.phone_number
-    elif message.text and re.fullmatch(r"\+?\d{9,12}", message.text):
-        phone_number = message.text
+    elif message.text:
+        # Faqat raqamlar va '+' belgisini qoldirish uchun tozalash
+        phone_number = re.sub(r"[^\d+]", "", message.text)
 
     with SessionLocal() as session:
         try:
@@ -111,11 +113,23 @@ async def handle_phone_number(message: Message, state: FSMContext):
                 await message.answer("⚠️ Xatolik: Avval /start ni bosing.")
                 return
 
-            if not phone_number and user.step == "phone_number":
+            if not phone_number or user.step != "phone_number":
                 await message.answer("⚠️ Iltimos, telefon raqamingizni to‘g‘ri kiriting yoki kontakt yuboring.")
                 return
 
-            user.phone_number = phone_number
+            # Telefon raqamini tekshirish
+            digit_count = len(re.sub(r"\+", "", phone_number))
+            if digit_count == 12 and phone_number.startswith("+998") and re.fullmatch(r"\+998\d{9}", phone_number):
+                # 12 raqamli va +998 bilan boshlansa
+                user.phone_number = phone_number
+            elif digit_count == 9 and re.fullmatch(r"\d{9}", phone_number):
+                # 9 raqamli bo‘lsa, +998 qo‘shiladi
+                phone_number = f"+998{phone_number}"
+                user.phone_number = phone_number
+            else:
+                await message.answer("⚠️ Telefon raqami noto‘g‘ri! 9 raqamli (masalan, 901234567) yoki +998 bilan 12 raqamli (masalan, +998901234567) bo‘lishi kerak.")
+                return
+
             user.step = "menu"
             session.commit()
             await state.clear()
@@ -157,7 +171,7 @@ async def handle_delivery(message: Message):
                 await message.answer("⚠️ Xatolik: Avval /start ni bosing.")
                 return
 
-            user.type_of_orders = "Yetkazib berish"  # Tanlangan tur saqlanadi
+            user.type_of_orders = "Yetkazib berish"
             user.step = "ask_location"
             session.commit()
             await message.answer("📍 Iltimos, Manzilingizni yuboring.", reply_markup=location_keyboard)
@@ -178,7 +192,7 @@ async def handle_pickup(message: Message):
                 await message.answer("⚠️ Xatolik: Avval /start ni bosing.")
                 return
 
-            user.type_of_orders = "Olib ketish"  # Tanlangan tur saqlanadi
+            user.type_of_orders = "Olib ketish"
             user.step = "web_app"
             session.commit()
             await message.answer("📱 Web ilovaga o‘tishingiz mumkin.", reply_markup=web_app_keyboard)
@@ -356,7 +370,7 @@ async def process_manual_address(message: Message, state: FSMContext):
             user.latitude = location.latitude
             user.longitude = location.longitude
             user.location = address
-            user.step = "location_saved"
+            user.step = "web_app"
             session.commit()
             await state.clear()
             await message.answer("✅ Manzilingiz saqlandi! Tasdiqlang yoki qayta yuboring.", reply_markup=web_app_keyboard)
@@ -377,7 +391,7 @@ async def confirm_location(message: Message):
                 await message.answer("⚠️ Avval manzilingizni yuboring!")
                 return
 
-            user.step = "location"
+            user.step = "web_app"
             session.commit()
             await message.answer("✅ Manzil tasdiqlandi! Web ilovaga o‘tishingiz mumkin.", reply_markup=web_app_keyboard)
         except Exception as e:
@@ -385,6 +399,7 @@ async def confirm_location(message: Message):
             logging.error(error_msg)
             await send_error_to_admin(message, error_msg)
             await message.answer("⚠️ Xatolik yuz berdi.")
+
 @router.message(F.text == "💻 Dasturchi bilan bog`lanish")
 async def return_developer(message: Message):
     with SessionLocal() as session:
@@ -422,6 +437,8 @@ async def fallback_handler(message: Message):
                 await message.answer("Menyuga xush kelibsiz!", reply_markup=menu_keys)
             else:
                 await message.answer("Iltimos, avval /start buyrug‘ini ishlatib botni boshlang.")
+            user.step = "menu"
+            session.commit()
     except Exception as e:
         error_msg = f"Error in fallback_handler: {str(e)}"
         logging.error(error_msg)

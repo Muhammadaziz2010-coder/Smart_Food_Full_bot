@@ -28,7 +28,7 @@ location_keyboard = ReplyKeyboardMarkup(
 
 web_app_keyboard = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="📍 Web app ni ochish", web_app=WebAppInfo(url="https://fastfood-lq3i.onrender.com/"))],
+        [KeyboardButton(text="📍 Web app ni ochish", web_app=WebAppInfo(url="https://269f-185-213-230-75.ngrok-free.app/"))],
         [KeyboardButton(text="❌ Bekor qilish")],
     ],
     resize_keyboard=True,
