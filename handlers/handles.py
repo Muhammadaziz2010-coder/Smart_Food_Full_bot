@@ -259,7 +259,7 @@ async def handle_discounts(message: Message):
                         f'🔹 {discount.title}\n'
                         f'📜 {discount.description}\n'
                         f'💰 Chegirma: {discount.discount_percent}%\n'
-                        ''----------------------\n'`
+                        '----------------------\n'
                     )
                 await message.answer(response_text, reply_markup=menu_keys)
             else:
