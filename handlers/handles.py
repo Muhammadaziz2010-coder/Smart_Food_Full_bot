@@ -221,11 +221,11 @@ async def my_orders(message: Message):
                 response_text = "📦 Sizning buyurtmalaringiz:\n\n"
                 for order in orders:
                     response_text += (
-                        f"🆔 Buyurtma ID: {order.id}\n"
-                        f"📅 Sana: {order.date}\n"
-                        f"📍 Manzil: {order.address or 'Noma\'lum'}\n"
-                        f"💰 Narx: {order.total_price or 0} so'm\n"
-                        f"📜 Holat: {order.status or 'Holat mavjud emas'}\n"
+                        f'🆔 Buyurtma ID: {order.id}\n'
+                        f'📅 Sana: {order.date}\n'
+                        f'📍 Manzil: {order.address or 'Noma\'lum'}\n'
+                        f'💰 Narx: {order.total_price or 0} so`m\n'
+                        f'📜 Holat: {order.status or 'Holat mavjud emas'}\n'
                         "----------------------\n"
                     )
                 await message.answer(response_text, reply_markup=menu_keys)
@@ -256,10 +256,10 @@ async def handle_discounts(message: Message):
                 response_text = "🎉 Mavjud aksiyalar:\n\n"
                 for discount in discounts:
                     response_text += (
-                        f"🔹 {discount.title}\n"
-                        f"📜 {discount.description}\n"
-                        f"💰 Chegirma: {discount.discount_percent}%\n"
-                        "----------------------\n"
+                        f'🔹 {discount.title}\n'
+                        f'📜 {discount.description}\n'
+                        f'💰 Chegirma: {discount.discount_percent}%\n'
+                        ''----------------------\n'`
                     )
                 await message.answer(response_text, reply_markup=menu_keys)
             else:
