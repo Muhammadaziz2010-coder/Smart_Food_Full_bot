@@ -317,10 +317,10 @@ async def handle_location(message: Message):
             user.step = "location_saved"
             session.commit()
 
-            await message.answer(f"📍 Sizning manzilingiz: {address}", reply_markup=validate_location)
+            await message.answer(f'📍 Sizning manzilingiz: {address}', reply_markup=validate_location)
             await message.answer("‼️ Agar manzilingiz to‘g‘ri bo‘lsa, tasdiqlang yoki qayta yuboring.")
         except Exception as e:
-            error_msg = f"Error in handle_location: {str(e)}"
+            error_msg = f'Error in handle_location: {str(e)}'
             logging.error(error_msg)
             await send_error_to_admin(message, error_msg)
             await message.answer("⚠️ Manzilni qayta ishlashda xatolik.")
@@ -339,7 +339,7 @@ async def handle_manual_address_prompt(message: Message, state: FSMContext):
             await state.set_state(States.manual_address)
             await message.answer("📍 Iltimos, manzilingizni qo‘lda kiriting (masalan: Toshkent, Chilanzar, 45-uy):")
         except Exception as e:
-            error_msg = f"Error in handle_manual_address_prompt: {str(e)}"
+            error_msg = f'Error in handle_manual_address_prompt: {str(e)}'
             logging.error(error_msg)
             await send_error_to_admin(message, error_msg)
             await message.answer("⚠️ Xatolik yuz berdi.")
@@ -375,7 +375,7 @@ async def process_manual_address(message: Message, state: FSMContext):
             await state.clear()
             await message.answer("✅ Manzilingiz saqlandi! Tasdiqlang yoki qayta yuboring.", reply_markup=web_app_keyboard)
         except Exception as e:
-            error_msg = f"Error in process_manual_address: {str(e)}"
+            error_msg = f'Error in process_manual_address: {str(e)}'
             logging.error(error_msg)
             await send_error_to_admin(message, error_msg)
             await message.answer("⚠️ Xatolik yuz berdi.")
@@ -395,7 +395,7 @@ async def confirm_location(message: Message):
             session.commit()
             await message.answer("✅ Manzil tasdiqlandi! Web ilovaga o‘tishingiz mumkin.", reply_markup=web_app_keyboard)
         except Exception as e:
-            error_msg = f"Error in confirm_location: {str(e)}"
+            error_msg = f'Error in confirm_location: {str(e)}'
             logging.error(error_msg)
             await send_error_to_admin(message, error_msg)
             await message.answer("⚠️ Xatolik yuz berdi.")
@@ -422,7 +422,7 @@ async def return_developer(message: Message):
             )
             await message.answer(developer_info, reply_markup=menu_keys, parse_mode="HTML")
         except Exception as e:
-            error_msg = f"Error in return_developer: {str(e)}"
+            error_msg = f'Error in return_developer: {str(e)}'
             logging.error(error_msg)
             await send_error_to_admin(message, error_msg)
             await message.answer("⚠️ Xatolik yuz berdi.")
@@ -440,6 +440,6 @@ async def fallback_handler(message: Message):
             user.step = "menu"
             session.commit()
     except Exception as e:
-        error_msg = f"Error in fallback_handler: {str(e)}"
+        error_msg = f'Error in fallback_handler: {str(e)}'
         logging.error(error_msg)
         await send_error_to_admin(message, error_msg)
