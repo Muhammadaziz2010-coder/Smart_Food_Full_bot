@@ -204,7 +204,7 @@ async def handle_pickup(message: Message):
 
 @router.message(F.text == "🛍️ Mening buyurtmalarim")
 async def my_orders(message: Message):
-    with SessionLocal() as session:
+    with (SessionLocal() as session):
         try:
             telegram_id = message.from_user.id
             user = session.query(User).filter_by(telegram_id=telegram_id).first()
@@ -220,14 +220,8 @@ async def my_orders(message: Message):
             if orders:
                 response_text = "📦 Sizning buyurtmalaringiz:\n\n"
                 for order in orders:
-                    response_text += (
-                        f'🆔 Buyurtma ID: {order.id}\n'
-                        f'📅 Sana: {order.date}\n'
-                        f'📍 Manzil: {order.address or 'Noma\'lum'}\n'
-                        f'💰 Narx: {order.total_price or 0} so`m\n'
-                        f'📜 Holat: {order.status or 'Holat mavjud emas'}\n'
-                        "----------------------\n")
-                await message.answer(response_text, reply_markup=menu_keys)
+                    response_text +=f'🆔 Buyurtma ID: {order.id}\n'                        f'📅 Sana: {order.date}\n'                        f'📍 Manzil: {order.address or 'Noma\'lum'}\n'                        f'💰 Narx: {order.total_price or 0} so`m\n'                        f'📜 Holat: {order.status or 'Holat mavjud emas'}\n'                        "----------------------\n"
+                    await message.answer(response_text, reply_markup=menu_keys)
             else:
                 await message.answer("❌ Sizda hali buyurtmalar mavjud emas.", reply_markup=menu_keys)
         except Exception as e:
