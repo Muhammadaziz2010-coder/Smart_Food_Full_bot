@@ -226,8 +226,7 @@ async def my_orders(message: Message):
                         f'📍 Manzil: {order.address or 'Noma\'lum'}\n'
                         f'💰 Narx: {order.total_price or 0} so`m\n'
                         f'📜 Holat: {order.status or 'Holat mavjud emas'}\n'
-                        "----------------------\n"
-                    )
+                        "----------------------\n")
                 await message.answer(response_text, reply_markup=menu_keys)
             else:
                 await message.answer("❌ Sizda hali buyurtmalar mavjud emas.", reply_markup=menu_keys)
